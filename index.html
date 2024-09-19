@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shiv Shakti Travels</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #ff5722;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 3.5em;
+      margin: 0;
+    }
+
+    h2 {
+      color: #ff5722;
+      margin-bottom: 10px;
+    }
+
+    .booking-section, .contact-section, .booking-history {
+      margin: 20px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      background-color: white;
+    }
+
+    form label {
+      font-weight: bold;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #ff5722;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #ff5722;
+      color: white;
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Shiv Shakti Travels</h1>
+    <p>Your trusted partner for booking vehicles</p>
+  </header>
+
+  <section class="booking-section">
+    <h2>Book Your Vehicle</h2>
+    <form id="bookingForm">
+      <label for="vehicle">Select Vehicle:</label>
+      <select id="vehicle" name="vehicle" required>
+        <option value="">-- Choose a Vehicle --</option>
+        <option value="Aura S CNG">Aura S CNG (Car)</option>
+        <option value="Ashok Leyland">Ashok Leyland (Bus)</option>
+      </select>
+
+      <div id="priceSection" style="display:none;">
+        <p><strong>Price: </strong><span id="price">For price, contact us.</span></p>
+      </div>
+
+      <label for="date">Choose Date:</label>
+      <input type="date" id="date" name="date" required>
+
+      <label for="pickup">Pickup Location:</label>
+      <input type="text" id="pickup" name="pickup" required>
+
+      <label for="drop">Drop Location:</label>
+      <input type="text" id="drop" name="drop" required>
+
+      <button type="submit">Book Now</button>
+    </form>
+    <p id="message"></p>
+  </section>
+
+  <section class="booking-history">
+    <h2>Booking History</h2>
+    <ul id="bookingList"></ul>
+    <button id="clearBookings" style="margin-top: 10px;">Clear Booking History</button>
+  </section>
+
+  <section class="contact-section">
+    <h2>Contact Us</h2>
+    <p>You can contact us for further details:</p>
+    <p><strong>Mobile no:</strong> 840968110</p>
+
+    <form id="contactForm">
+      <label for="name">Your Name:</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="message">Message:</label>
+      <textarea id="contactMessage" name="message" rows="5" required></textarea>
+
+      <button type="submit">Submit</button>
+    </form>
+    <p id="contactConfirmation"></p>
+  </section>
+
+  <footer>
+    <p>&copy; 2024 Shiv Shakti Travels. Your Trusted Partner.</p>
+  </footer>
+
+  <script>
+    document.getElementById('bookingForm').addEventListener('submit', function (e) {
+      e.preventDefault(); // Prevents form from refreshing the page
+
+      var vehicle = document.getElementById('vehicle').value;
+      var date = document.getElementById('date').value;
+      var pickup = document.getElementById('pickup').value;
+      var drop = document.getElementById('drop').value;
+
+      if (vehicle && date && pickup && drop) {
+        var bookingDetails = `Vehicle: ${vehicle}, Date: ${date}, Pickup: ${pickup}, Drop: ${drop}`;
+        var bookingList = document.getElementById('bookingList');
+
+        var savedBookings = localStorage.getItem('bookings');
+        var bookings = savedBookings ? JSON.parse(savedBookings) : [];
+        bookings.push(bookingDetails);
+        localStorage.setItem('bookings', JSON.stringify(bookings));
+
+        var listItem = document.createElement('li');
+        listItem.textContent = bookingDetails;
+        bookingList.appendChild(listItem);
+
+        document.getElementById('message').textContent = 'Booking successful!';
+        document.getElementById('message').style.color = 'green';
+
+        // Clear form fields
+        document.getElementById('vehicle').value = '';
+        document.getElementById('date').value = '';
+        document.getElementById('pickup').value = '';
+        document.getElementById('drop').value = '';
+      } else {
+        document.getElementById('message').textContent = 'Please fill out all fields.';
+        document.getElementById('message').style.color = 'red';
+      }
+    });
+
+    function loadBookingHistory() {
+      var bookingList = document.getElementById('bookingList');
+      var savedBookings = localStorage.getItem('bookings');
+      if (savedBookings) {
+        var bookings = JSON.parse(savedBookings);
+        bookings.forEach(function (booking) {
+          var listItem = document.createElement('li');
+          listItem.textContent = booking;
+          bookingList.appendChild(listItem);
+        });
+      }
+    }
+
+    document.getElementById('clearBookings').addEventListener('click', function () {
+      document.getElementById('bookingList').innerHTML = '';
+      localStorage.removeItem('bookings');
+    });
+
+    loadBookingHistory();
+  </script>
+</body>
+</html>
